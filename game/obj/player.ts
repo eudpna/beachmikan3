@@ -20,11 +20,12 @@ export class Player {
     isWalking = false
     isFlying = false
     readonly accel = 3
-    readonly jumpForce = 17
+    readonly jumpForce = 18
     readonly maxVx = 12
     readonly maxVy = 20
     readonly resistance = 3
     walkCount = 0
+    isGrounding = false
 
     constructor(x: number, y: number) {
         this.x = x
@@ -36,40 +37,62 @@ export class Player {
         this.move(keys, world.geo)
     }
 
-    move(keys: string[], geo: Geo) {
-        let vx = 0
-        if (keys.includes('left') && keys.includes('right')) {}
+    private moveX(keys: string[], geo: Geo) {
+        // x漸減
+        if (!keys.includes('left') && !keys.includes('right')) {
+            this.v.x += Math.abs(this.v.x) < this.resistance ? 0 : (
+                this.v.x < 0 ? this.resistance : -this.resistance
+            )
+        }
+        if (keys.includes('left') && keys.includes('right')) { }
         else if (keys.includes('left')) {
-            vx -= this.accel
+            this.v.x -= this.accel
         }
         else if (keys.includes('right')) {
-            vx += this.accel
+            this.v.x += this.accel
         }
         // x速度制限
-        vx = restrict(vx, -this.maxVx, this.maxVx)
+        this.v.x = restrict(this.v.x, -this.maxVx, this.maxVx)
         // x移動
-        this.x += vx
-        // x 衝突判定
-        collide(this, geo, ['l', 'r'])
+        this.x += this.v.x
+         // x 衝突判定
+        const touches = collide(this, geo, ['l', 'r'])
+        if (touches.includes('b')) this.isGrounding = true
+        // フラグリセット
+        if (touches.includes('b') || isTouching(this, geo, 'b')) this.isJumping = false
+    }
 
-
+    private moveY(keys: string[], geo: Geo) {
         // y
-        let vy = 0
         // y 上衝突
-        if (isTouching(this, geo, 't')) vy = 1
+        if (isTouching(this, geo, 't')) this.v.y = 1
         //　y 重力
-        vy += 1.5
-        // y ジャンプ
-        if (isTouching(this, geo, 'b') && !this.isJumping && keys.includes('up')) {
-            this.isJumping = true
-            vy = -this.jumpForce
-        }
+        this.v.y += 1.5
+        
         // y 速度制限
-        vy = restrict(vy, -this.maxVy, this.maxVy)
-        this.v.y += vy
+        this.v.y = restrict(this.v.y, -this.maxVy, this.maxVy)
         this.y += this.v.y
         // y 衝突判定
-        collide(this, geo, ['t', 'b'])
+        const touches = collide(this, geo, ['t', 'b'])
+        if (touches.includes('b')) this.isGrounding = true
+    }
+
+    private jump(keys: string[], geo: Geo) {
+        const touches = collide(this, geo, ['t', 'b'])
+        if (touches.includes('b')) this.isGrounding = true
+        if (this.isGrounding && keys.includes('up')) {
+            this.isJumping = true
+            this.v.y = -this.jumpForce
+        }
+    }
+
+    move(keys: string[], geo: Geo) {
+        this.jump(keys, geo)
+        this.isGrounding = false
+        this.moveY(keys, geo)
+        this.jump(keys, geo)
+        this.moveX(keys, geo)
+        this.jump(keys, geo)
     }
 
     // move(direction: Direction4) {
@@ -94,7 +117,7 @@ export class Player {
     // }
 
     render(cctx: CanvasRenderingContext2D, screen: Screen) {
-        console.log(this.x, this.y)
+        // console.log(this.x, this.y)
         cctx.fillStyle = 'red'
         cctx.fillRect(this.x - screen.x, this.y - screen.y, this.w, this.h)
 
