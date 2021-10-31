@@ -9,8 +9,12 @@ import { update } from "./update"
 
 export class Facilitator {
     timer = new Timer(conf.fps)
+    update: Function
+    render: Function
     
     constructor(update: Function, render: Function) {
+        this.update = update
+        this.render = render
         this.timer.onUpdate(() => {
             update(),
             render()
@@ -19,5 +23,6 @@ export class Facilitator {
 
     start() {
         this.timer.start()
+        this.render()
     }    
 }

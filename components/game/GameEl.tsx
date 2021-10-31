@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import useCanvas from "../../lib/useCanvas";
-import { UI } from "./UI/UI";
-import { Manager } from "../../game/game";
+import { Game } from "../../game/game";
 import { loadResource } from "../../game/resource/loadResource";
 import conf from "../../game/conf";
+import { UIEl } from "./UI/UIEl";
 
 
 export const GameEl: React.FC<{}> = () => {
     const [state, setState] = useState<{
-        game: Manager | null
+        game: Game | null
     }>({
         game: null
     })
@@ -20,10 +20,12 @@ export const GameEl: React.FC<{}> = () => {
         loadResource()
         .then(resource => {
             setState(state => ({
-                game: new Manager(cctx, resource)
+                game: new Game(cctx, resource)
             }))
         })
     }, [cctx])
+
+    
     
     return <>
         <div className="mx-auto noselect"
@@ -39,7 +41,7 @@ export const GameEl: React.FC<{}> = () => {
                 width={conf.screen.w}
                 height={conf.screen.h}
             ></canvas>
-            <UI game={state.game} />
+            {state.game ? <UIEl ui={state.game.ui} /> : null}
         </div>
     </>
 }

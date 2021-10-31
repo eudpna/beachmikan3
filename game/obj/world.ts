@@ -17,6 +17,7 @@ export class World {
     }
 
     constructor() {
+        console.log('world')
     }
     
     loadStage(index: number) {

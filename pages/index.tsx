@@ -2,8 +2,7 @@
 import Head from 'next/head'
 import React, { useEffect } from 'react'
 import { A } from '../components/A';
-import { Game } from '../components/game/Game';
-import { GameWrapper } from '../components/game/GameWrapper';
+import { GameElAvoidSSR } from '../components/game/GameElAvoidSSR';
 
 
 const Index: React.FC<{}> = () => {
@@ -24,7 +23,7 @@ const Index: React.FC<{}> = () => {
         </Head>
         <div lang="ja" className="w-full pt-10">
             <div>
-                <GameWrapper />
+                <GameElAvoidSSR />
             </div>
             <div className="mx-auto max-w-xl pb-12" style={{
                 maxWidth: '35rem'

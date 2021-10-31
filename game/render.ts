@@ -3,18 +3,19 @@ import { World } from "./obj/world"
 // 描画手続き
 
 export function render(cctx: CanvasRenderingContext2D, world: World) {
-    clearCanvas()
+    console.log('cctx is', cctx)
+    clearCanvas(cctx)
     world.player.render(cctx, world.screen)
-    drawCanvasBorder()
+    drawCanvasBorder(cctx)
 }
 
-function clearCanvas() {
-    this.cctx.fillStyle = 'white'
-    this.cctx.fillRect(0, 0, this.cctx.canvas.width, this.cctx.canvas.height)
+function clearCanvas(cctx: CanvasRenderingContext2D) {
+    cctx.fillStyle = 'white'
+    cctx.fillRect(0, 0, cctx.canvas.width, cctx.canvas.height)
 }
 
-function drawCanvasBorder() {
-    this.cctx.strokeStyle = 'black'
-    this.cctx.lineWidth = 3
-    this.cctx.strokeRect(0, 0, this.cctx.canvas.width, this.cctx.canvas.height)
+function drawCanvasBorder(cctx: CanvasRenderingContext2D) {
+    cctx.strokeStyle = 'black'
+    cctx.lineWidth = 3
+    cctx.strokeRect(0, 0, cctx.canvas.width, cctx.canvas.height)
 }
