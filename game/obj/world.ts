@@ -6,7 +6,7 @@ import { Screen } from "./screen";
 import { getStageData } from "./stage/stageData";
 import { stageSpecificagions } from "./stage/stageSpecification";
 
-// ゲーム内世界。ゲーム内オブジェクトの管理担当
+// ゲーム内オブジェクトの管理担当
 export class World {
     geo: Geo = []
     player = new Player(0, 0)
@@ -18,7 +18,7 @@ export class World {
 
     constructor() {
     }
-
+    
     loadStage(index: number) {
         const spec = stageSpecificagions()[index]
         const sd = getStageData(spec.geoID)

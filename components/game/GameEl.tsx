@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from "react";
-import conf from "../../g/conf";
-import { G } from "../../g/G";
 import useCanvas from "../../lib/useCanvas";
 import { UI } from "./UI/UI";
+import { Manager } from "../../game/game";
+import { loadResource } from "../../game/resource/loadResource";
+import conf from "../../game/conf";
 
-export const Game: React.FC<{}> = () => {
-    const [state, _] = useState<{
-        g: G
+
+export const GameEl: React.FC<{}> = () => {
+    const [state, setState] = useState<{
+        game: Manager | null
     }>({
-        g: new G
+        game: null
     })
 
     const [canvasRef, cctx] = useCanvas()
     
     useEffect(() => {
         if (!cctx) return
-        state.g.setCanvasContext(cctx)
-        state.g.render()
-        state.g.start()
+        loadResource()
+        .then(resource => {
+            setState(state => ({
+                game: new Manager(cctx, resource)
+            }))
+        })
     }, [cctx])
     
     return <>
@@ -34,7 +39,7 @@ export const Game: React.FC<{}> = () => {
                 width={conf.screen.w}
                 height={conf.screen.h}
             ></canvas>
-            <UI g={state.g} />
+            <UI game={state.game} />
         </div>
     </>
 }

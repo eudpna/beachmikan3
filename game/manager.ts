@@ -5,6 +5,8 @@ import { KeyListener } from "./keyListener"
 import { update } from "./update"
 import { render } from "./render"
 
+// ゲーム全体を統括
+
 export class Manager {
     resource: Resource
     cctx: CanvasRenderingContext2D
@@ -17,11 +19,15 @@ export class Manager {
         this.cctx = cctx
     }
 
-    update() {
+    private update() {
         update(this.world, this.keyListener.keys)
     }
     
-    render() {
+    private render() {
         render(this.cctx, this.world)
+    }
+
+    start() {
+        this.facilitator.start()
     }
 }

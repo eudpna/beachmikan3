@@ -1,9 +1,9 @@
 import React from "react"
-import { G } from "../../../g/G"
+import { Manager } from "../../../game/game"
 
 
 export const UI: React.FC<{
-    g: G
+    game: Manager
 }> = (props) => {
     return <>
     </>
