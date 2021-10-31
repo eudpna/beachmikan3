@@ -1,8 +1,6 @@
 import { Vec2 } from "../lib/physics";
 import { renderGrid } from "../lib/renderGrid";
 import { Geo } from "./geo";
-import { Piece } from "./piece/piece";
-import { Slime } from "./piece/slime";
 import { Player } from "./player";
 import { Screen } from "./screen";
 import { getStageData } from "./stage/stageData";

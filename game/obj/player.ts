@@ -4,6 +4,7 @@ import { Direction4 } from "../lib/physics"
 import { collide, isTouching } from "./bodi"
 import { Geo } from "./geo"
 import { Screen } from "./screen"
+import { World } from "./world"
 
 export class Player {
     x = 0
@@ -30,13 +31,18 @@ export class Player {
         this.y = y
     }
 
-    move(key: string[], geo: Geo) {
+    // 毎フレーム呼ばれる更新関数
+    update(keys: string[], world: World) {
+        this.move(keys, world.geo)
+    }
+
+    move(keys: string[], geo: Geo) {
         let vx = 0
-        if (key.includes('l') && key.includes('r')) {}
-        else if (key.includes('l')) {
+        if (keys.includes('l') && keys.includes('r')) {}
+        else if (keys.includes('l')) {
             vx -= this.accel
         }
-        else if (key.includes('r')) {
+        else if (keys.includes('r')) {
             vx += this.accel
         }
         // x速度制限
@@ -54,7 +60,7 @@ export class Player {
         //　y 重力
         vy += 1.5
         // y ジャンプ
-        if (isTouching(this, geo, 'b') && !this.isJumping && key.includes('up')) {
+        if (isTouching(this, geo, 'b') && !this.isJumping && keys.includes('up')) {
             this.isJumping = true
             vy = -this.jumpForce
         }

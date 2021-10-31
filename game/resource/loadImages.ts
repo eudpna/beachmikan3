@@ -1,27 +1,8 @@
-import urlList from '../script/resource/imgList.json'
+import urlList from '../../script/resource/imgList.json'
 import path from 'path'
 
 
-export class Resource {
-    isLoaded = false
-    imgs: { [key: string]: HTMLImageElement } = {}
-    onloadFn: (() => void)[] = []
-
-    load() {
-        return loadImages()
-        .then(imgs => {
-            this.imgs = imgs
-            this.onloadFn.map(fn => fn())
-            this.isLoaded = true
-        })
-    }
-
-    onload(fn: () => void) {
-        this.onloadFn.push(fn)
-    }
-}
-
-export default async function loadImages(): Promise<Resource['imgs']> {
+export default async function loadImages(): Promise<{ [key: string]: HTMLImageElement }> {
 
     const imgs = await Promise.all(urlList.map(url => getImage(path.join('images', url))))
 
@@ -39,7 +20,7 @@ function getImage(url: string): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const rootPath = '/'
 
-        const image = new Image()
+        const image = new Image() // Using optional size for image
 
         image.src = rootPath + url
         image.addEventListener('load', e => {
