@@ -1,3 +1,4 @@
+import conf from '../../conf'
 import { Vec2 } from '../../lib/physics'
 import { Geo } from '../geo'
 import geoDatas from './geos.json'
@@ -38,23 +39,23 @@ export function getStageData(geoID: string): StageData {
                 continue
             } else if (cell === 'p') {
                 p = {
-                    x: i,
-                    y: j
+                    x: i*conf.c,
+                    y: j*conf.c
                 }
                 c[i][j] = 0
                 continue
             } else if (cell.slice(0, 1) === 'k') {
                 ks.push({
                     id: cell.slice(1),
-                    x: i,
-                    y: j,                    
+                    x: i*conf.c,
+                    y: j*conf.c,
                 })
                 c[i][j] = 0
                 continue
             } else if (cell === 'g') {
                 g = {
-                    x: i,
-                    y: j
+                    x: i*conf.c,
+                    y: j*conf.c
                 }
                 c[i][j] = 0
                 continue

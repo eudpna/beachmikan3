@@ -11,17 +11,20 @@ export class Facilitator {
     timer = new Timer(conf.fps)
     update: Function
     render: Function
+    world: World
     
-    constructor(update: Function, render: Function) {
+    constructor(update: Function, render: Function, world: World) {
         this.update = update
         this.render = render
+        this.world = world
         this.timer.onUpdate(() => {
-            update(),
-            render()
+            this.update(),
+            this.render()
         })
     }
 
     start() {
+        this.world.loadStage(0)
         this.timer.start()
         this.render()
     }    

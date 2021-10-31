@@ -5,4 +5,5 @@ import { World } from "./obj/world";
 
 export function update(world: World, keys: string[]) {
     world.player.update(keys, world)
+    world.screen.update(world.player)
 }

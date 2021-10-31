@@ -9,7 +9,6 @@ export class Timer {
     }
 
     start() {
-        console.log('start!')
         window.setTimeout(() => {
             this.update()
         }, 1000 / this.fps)

@@ -17,14 +17,14 @@ export class World {
     }
 
     constructor() {
-        console.log('world')
+        ('world')
     }
     
     loadStage(index: number) {
         const spec = stageSpecificagions()[index]
         const sd = getStageData(spec.geoID)
 
-        this.player = new Player(sd.player.x, sd.player.y)
+        this.player = new Player(sd.player.x, sd.player.y-100)
         this.geo = sd.geo
         this.screen = new Screen(sd.player.x, sd.player.y)
     }

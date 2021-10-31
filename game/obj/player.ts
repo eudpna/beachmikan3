@@ -38,11 +38,11 @@ export class Player {
 
     move(keys: string[], geo: Geo) {
         let vx = 0
-        if (keys.includes('l') && keys.includes('r')) {}
-        else if (keys.includes('l')) {
+        if (keys.includes('left') && keys.includes('right')) {}
+        else if (keys.includes('left')) {
             vx -= this.accel
         }
-        else if (keys.includes('r')) {
+        else if (keys.includes('right')) {
             vx += this.accel
         }
         // x速度制限
@@ -67,17 +67,18 @@ export class Player {
         // y 速度制限
         vy = restrict(vy, -this.maxVy, this.maxVy)
         this.v.y += vy
+        this.y += this.v.y
         // y 衝突判定
         collide(this, geo, ['t', 'b'])
     }
 
     // move(direction: Direction4) {
     //     switch (direction) {
-    //         case 'l': {
+    //         case 'left': {
     //             this.x--
     //             break
     //         }
-    //         case 'r': {
+    //         case 'right': {
     //             this.x++
     //             break
     //         }
@@ -93,8 +94,9 @@ export class Player {
     // }
 
     render(cctx: CanvasRenderingContext2D, screen: Screen) {
+        console.log(this.x, this.y)
         cctx.fillStyle = 'red'
-        cctx.fillRect(this.x*conf.c - screen.x, this.y*conf.c -screen.y, conf.c, conf.c)
+        cctx.fillRect(this.x - screen.x, this.y - screen.y, this.w, this.h)
 
 
         const walkStep = (() => {
@@ -133,7 +135,7 @@ export class Player {
         //     y: gd.state.stage.player.r.y - gd.state.stage.screen.p.y,
         //     w: playerOffset.w,
         //     h: playerOffset.h,
-        //     flipH: gd.state.stage.anime.player.direction === 'l',
+        //     flipH: gd.state.stage.anime.player.direction === 'left',
         //     rotate: rotate
         // })
         

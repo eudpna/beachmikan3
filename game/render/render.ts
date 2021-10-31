@@ -1,10 +1,11 @@
-import { World } from "./obj/world"
+import { World } from "../obj/world"
+import { renderGeo } from "./renderGeo"
 
 // 描画手続き
 
 export function render(cctx: CanvasRenderingContext2D, world: World) {
-    console.log('cctx is', cctx)
     clearCanvas(cctx)
+    renderGeo(cctx, world.geo, world.screen)
     world.player.render(cctx, world.screen)
     drawCanvasBorder(cctx)
 }

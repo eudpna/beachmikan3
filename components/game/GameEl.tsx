@@ -13,6 +13,12 @@ export const GameEl: React.FC<{}> = () => {
         game: null
     })
 
+    const [_, setState0] = useState<{}>({})
+    
+    function rerenderUI() {
+        setState0(state => ({ ...state }))
+    }
+
     const [canvasRef, cctx] = useCanvas()
     
     useEffect(() => {
@@ -20,7 +26,7 @@ export const GameEl: React.FC<{}> = () => {
         loadResource()
         .then(resource => {
             setState(state => ({
-                game: new Game(cctx, resource)
+                game: new Game(cctx, resource, rerenderUI)
             }))
         })
     }, [cctx])

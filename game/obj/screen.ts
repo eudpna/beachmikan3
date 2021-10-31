@@ -19,11 +19,15 @@ export class Screen {
         this.y = y
     }
 
+    update(player: Player) {
+        this.move(player)
+    }
+
     move(player: Player) {
 
         const target = {
-            x: (player.x*conf.c) + conf.c / 2,
-            y: (player.y*conf.c) + conf.c / 2
+            x: (player.x) + player.w / 2,
+            y: (player.y) + player.h / 2
         }
 
         // console.log(target.x, target.y)

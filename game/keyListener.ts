@@ -5,6 +5,9 @@ export class KeyListener {
         window.addEventListener('keydown', e => {
             this.keys.push(modifyKeyName(e.key))
         })
+        window.addEventListener('keyup', e => {
+            this.keys = this.keys.filter(k => k !== modifyKeyName(e.key))
+        })
     }
 
     clear() {
