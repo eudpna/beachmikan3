@@ -21,4 +21,7 @@ export function modifyKeyName(key: string): string {
         .replace('arrowright', 'right')
         .replace('arrowdown', 'down')
         .replace('arrowup', 'up')
+
+        // specific to this proejct
+        .replace('z', 'up')
 }

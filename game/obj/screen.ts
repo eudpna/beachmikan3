@@ -1,8 +1,7 @@
 import conf from "../conf"
 import { restrict } from "../lib/math"
-import { Direction4 } from "../lib/physics"
+import { Direction4, Vec2 } from "../lib/physics"
 import { Player } from "./player"
-
 
 
 export class Screen {
@@ -13,10 +12,14 @@ export class Screen {
     scale = conf.screen.scale
     readonly maxV = 300
     readonly divide = 10
+    min: Vec2
+    max: Vec2
 
-    constructor(x: number, y: number) {
+    constructor(x: number, y: number, min: Vec2, max: Vec2) {
         this.x = x
         this.y = y
+        this.min = min
+        this.max = max
     }
 
     update(player: Player) {
@@ -30,19 +33,17 @@ export class Screen {
             y: (player.y) + player.h / 2
         }
 
-        // console.log(target.x, target.y)
-        // const vx = this.x - (target.x - (this.w/2))
-
         const vx = restrict((this.x - (target.x - (this.w/2))) / this.divide, -this.maxV, this.maxV)
         const vy = restrict((this.y - (target.y - (this.h/2))) / this.divide, -this.maxV, this.maxV)
 
-        // console.log(vx, vy)
+        this.x -= vx
+        this.y -= vy
 
-        let x = this.x - vx
-        let y = this.y - vy
-
-        this.x = x
-        this.y = y
-
+        // 位置制限
+        // console.log(this.max, this.min)
+        if (this.x > this.max.x) this.x = this.max.x
+        if (this.x < this.min.x) this.x = this.min.x
+        if (this.y > this.max.y) this.y = this.max.y
+        if (this.y < this.min.y) this.y = this.min.y
     }
 }

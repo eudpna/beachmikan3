@@ -1,21 +1,18 @@
+import conf from "../conf"
 import { Geo } from "../obj/geo"
 import { Screen } from "../obj/screen"
 
-
 const wallColor = '#e6d367'
-
-
 
 export function renderGeo(cctx: CanvasRenderingContext2D, geo: Geo, screen: Screen) {
     for (let i = 0; i < geo.length; i++) {
         for (let j = 0; j < geo[0].length; j++) {
             if (geo[i][j] === 0) continue
-            // else if (geo[i][j] === 2) cctx.fillStyle = 'gray'
             else {
                 const x = i * 32 - screen.x
                 const y = j * 32 - screen.y
-                const w = 32
-                const h = 32
+                const w = conf.c + 1
+                const h = conf.c + 1
                 cctx.fillStyle = wallColor
                 cctx.fillRect(x, y, w, h)
                 const outlineWidth = 2
