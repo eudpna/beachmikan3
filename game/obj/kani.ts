@@ -1,3 +1,4 @@
+import { Howl } from "howler"
 import conf from "../conf"
 import { isInScreen } from "../lib/isInScreen"
 import { getDistance, restrict } from "../lib/math"
@@ -187,6 +188,13 @@ export class Kani {
     }
 
 
+    playDamageSound() {
+        const audio = new Howl({
+            src: ['/audios/main/kani.mp3']
+        });
+        audio.volume(0.5)
+        audio.play()
+    }
 }
 
 

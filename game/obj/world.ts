@@ -26,7 +26,6 @@ export class World {
     isClear = false
 
     constructor() {
-        ('world')
     }
 
     detectGoal(): boolean {

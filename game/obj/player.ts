@@ -1,3 +1,4 @@
+import { Howl } from "howler"
 import conf from "../conf"
 import { getDistance, restrict } from "../lib/math"
 import { Direction4, Rect, Vec2 } from "../lib/physics"
@@ -107,15 +108,19 @@ export class Player {
     }
 
     private jump(keys: string[], geo: Geo) {
+        
         const touches = collide(this, geo.chips, ['t', 'b'])
         if (touches.includes('b')) this.isGrounding = true
-        if (this.isGrounding && keys.includes('up')) {
+        if (!this.isJumping && this.isGrounding && keys.includes('up')) {
             this.isJumping = true
+            this.y --;
             this.v.y = -this.jumpForce
+            this.playJumpSound()
         }
     }
 
     private move(keys: string[], geo: Geo) {
+        const isGrounding = this.isGrounding
         this.jump(keys, geo)
         this.isGrounding = false
         this.moveY(keys, geo)
@@ -124,7 +129,12 @@ export class Player {
         this.jump(keys, geo)
         // 落下死亡判定
         const deadLine = conf.c * (geo.h - 2)
-        if (this.y > deadLine) this.isDead = true
+        if (this.y > deadLine) {
+            this.isDead = true
+            this.playDamageSound()
+        }
+        // 着地音
+        if (!isGrounding && this.isGrounding) this.playRunSound()
     }
 
     moveAtGoal(geo: Geo): void {
@@ -174,6 +184,7 @@ export class Player {
         this.isDead = true
         if (this.x - this.x < 0) this.deadDirection = 'r'
         else this.deadDirection = 'l'
+        this.playDamageSound()
     }
 
     stepKani(kani: Kani, keys: string[]): void {
@@ -185,9 +196,14 @@ export class Player {
         kani.isDead = true
         this.v.y = -15
         this.y = kani.y - 32 - 15
-        if (keys.includes('up')) this.v.y = -31
+        if (keys.includes('up')) {
+            this.v.y = -31
+            this.playHighJumpSound()
+        }
         if (this.x - kani.x < 0) kani.deadDirection = 'l'
         kani.deadDirection = 'r'
+
+        kani.playDamageSound()
     }    
 
     animate(geo: Geo, keys: string[]): void {
@@ -221,6 +237,8 @@ export class Player {
             this.isWalking = false
             this.walkCount = 0
         }
+
+        if (this.isWalking && this.walkCount % 6 === 5) this.playRunSound()
 
         // 空中にいるか
         if (isTouching(this, geo.chips, 'b')) {
@@ -298,6 +316,40 @@ export class Player {
             flipH: this.direction === 'l',
             rotate: rotate
         })
-        
+    }
+
+    playJumpSound() {
+        // const audio = new Howl({
+        //     src: ['/audios/main/jump.mp3']
+        // });
+        // audio.volume(0.4)
+        // audio.rate(1.4)
+        // audio.play()
+        const audio = new Audio('/audios/main/jump.mp3')
+        audio.playbackRate = 4
+        audio.play()
+    }
+
+    playHighJumpSound() {
+        const audio = new Audio('/audios/main/jump.mp3')
+        audio.playbackRate = 2
+        audio.play()
+    }
+
+    playDamageSound() {        
+        const audio = new Howl({
+            src: ['/audios/main/hit.mp3']
+        });
+        audio.volume(1)
+        audio.play()
+    }
+
+    playRunSound() {
+        if (this.isDead) return
+        const audio = new Howl({
+            src: ['/audios/main/run.mp3']
+        });
+        audio.volume(0.6)
+        audio.play()
     }
 }
