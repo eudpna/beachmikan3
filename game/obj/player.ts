@@ -27,7 +27,7 @@ export class Player {
     }
     isDead = false
     isJumping = false
-    isGrounding = false
+    isGrounding = true
 
     // flags for animation
     directionCount = 0

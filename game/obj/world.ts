@@ -56,7 +56,7 @@ export class World {
         const spec = stageSpecificagions()[index]
         const sd = getStageData(spec.geoID)
         this.goal = new Goal(sd.goal.x, sd.goal.y)
-        this.player = new Player(sd.player.x, sd.player.y)
+        this.player = new Player(sd.player.x, sd.player.y+10)
         this.player.direction = (spec.player && spec.player.direction) ? spec.player.direction : 'r'
         console.log(spec)
         this.kanis = sd.kanis.map((kaniData, i) => {
