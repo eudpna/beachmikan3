@@ -1,4 +1,5 @@
 import conf from "../conf";
+import { getDistance } from "../lib/math";
 import { Vec2 } from "../lib/physics";
 import { renderGrid } from "../lib/renderGrid";
 import { Geo } from "./geo";
@@ -38,7 +39,10 @@ export class World {
 
     nextStage() {
         this.stageIndex++
-        this.loadStage(this.stageIndex)
+        if (this.stageIndex === 5) {
+            this.isClear = true
+        }
+        else this.loadStage(this.stageIndex)
     }
 
     retry() {
@@ -76,6 +80,11 @@ export class World {
         this.isGoal = false
         this.stageTick = 0
         this.goalCount = 0
+
+        // !!
+        if (this.stageIndex === 3) {
+            this.goal.x += 40
+        }        
     }
 
     // ゲームの状態を更新する手続き。毎フレーム呼ばれる。

@@ -4,6 +4,7 @@ import { World } from "./obj/world";
 // 引数keysは押されているキーのリスト
 
 export function update(world: World, keys: string[]) {
+    if (world.isClear) return
     world.player.update(keys, world)
     world.screen.update(world.player)
     world.detectGoal()

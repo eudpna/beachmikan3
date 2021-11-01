@@ -1,16 +1,17 @@
 import conf from "../conf"
-import { restrict } from "../lib/math"
+import { getDistance, restrict } from "../lib/math"
 import { Direction4, Rect, Vec2 } from "../lib/physics"
 import { drawImage } from "../render/drawImage"
 import { Resource } from "../resource/loadResource"
 import { collide, isTouching } from "./bodi"
 import { Geo } from "./geo"
+import { Kani } from "./kani"
 import { Screen } from "./screen"
 import { World } from "./world"
 
 export class Player {
     readonly accel = 3
-    readonly jumpForce = 18
+    readonly jumpForce = 19
     readonly maxVx = 12
     readonly maxVy = 20
     readonly resistance = 3
@@ -44,6 +45,10 @@ export class Player {
 
     // 毎フレーム呼ばれる更新関数
     update(keys: string[], world: World) {
+        if (!this.isDead) {
+            this.damage(world.kanis, keys)
+        }
+
         if (this.isDead) this.moveDead()
         else if (world.isGoal) this.moveAtGoal(world.geo)
         else this.move(keys, world.geo)
@@ -51,6 +56,8 @@ export class Player {
 
         if (this.isDead) this.deadCount++
         else this.deadCount = 0
+
+       
 
         // 死んだらリトライ
         if (this.deadCount === 30) {
@@ -153,10 +160,37 @@ export class Player {
         this.y += this.v.y
     }
 
-    
+    damage(kanis: Kani[], keys: string[]) {
+        kanis.forEach(kani => {
+            if (kani.isDead) return
+            this.stepKani(kani, keys)
+            this.hitByKani(kani)
+        })
+    }
+
+    hitByKani(kani: Kani): void {
+        const d = getDistance(this, kani)
+        if (d > 32) return
+        this.isDead = true
+        if (this.x - this.x < 0) this.deadDirection = 'r'
+        else this.deadDirection = 'l'
+    }
+
+    stepKani(kani: Kani, keys: string[]): void {
+        if (this.v.y <= 0) return
+        if (kani.isDead || this.isDead) return
+        if (kani.y - (this.y + this.v.y) > 32 + 6) return
+        if (kani.y - (this.y + this.v.y) < 16) return
+        if (Math.abs(kani.x - this.x) > 32) return
+        kani.isDead = true
+        this.v.y = -15
+        this.y = kani.y - 32 - 15
+        if (keys.includes('up')) this.v.y = -31
+        if (this.x - kani.x < 0) kani.deadDirection = 'l'
+        kani.deadDirection = 'r'
+    }    
 
     animate(geo: Geo, keys: string[]): void {
-
         if (!this.isJumping) {
             this.jumpCount = 0
         } else {
@@ -169,7 +203,7 @@ export class Player {
             this.directionCount -= 1
         }
         // 向きを設定
-        // if (gd.state.stage.isGoal) {
+        // if (this.isGoal) {
         //     this.direction = 'r'
         // }
         if (keys.includes('left') && !keys.includes('right')) {

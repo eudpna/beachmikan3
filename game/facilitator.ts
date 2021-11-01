@@ -23,7 +23,7 @@ export class Facilitator {
     }
 
     start() {
-        this.world.loadStage(0)
+        this.world.loadStage(this.world.stageIndex)
         this.timer.start()
         this.render()
     }    
