@@ -2,6 +2,7 @@ import conf from "../conf";
 import { Vec2 } from "../lib/physics";
 import { renderGrid } from "../lib/renderGrid";
 import { Geo } from "./geo";
+import { Goal } from "./goal";
 import { Player } from "./player";
 import { Screen } from "./screen";
 import { getStageData } from "./stage/stageData";
@@ -13,10 +14,7 @@ export class World {
     geo: Geo = []
     player = new Player(0, 0)
     screen = new Screen(0, 0, {x:0,y:0}, {x:0,y:0})
-    goal: Vec2 = {
-        x: 0,
-        y: 0
-    }
+    goal: Goal = new Goal(0, 0)
     // 状態
     stageIndex = 0
     isGoal = false
@@ -48,7 +46,7 @@ export class World {
     loadStage(index: number) {
         const spec = stageSpecificagions()[index]
         const sd = getStageData(spec.geoID)
-        this.goal = sd.goal
+        this.goal = new Goal(sd.goal.x, sd.goal.y)
         this.player = new Player(sd.player.x, sd.player.y)
         this.player.direction = (spec.player && spec.player.direction) ? spec.player.direction : 'r'
         this.geo = sd.geo

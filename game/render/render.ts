@@ -5,7 +5,6 @@ import { Resource } from "../resource/loadResource"
 import { drawImage, ImgCtx } from "./drawImage"
 import { renderBackGround } from "./renderBackGround"
 import { renderGeo } from "./renderGeo"
-import { renderGoal } from "./renderGoal"
 import { renderUI } from "./renderUI"
 
 // 描画手続き
@@ -15,7 +14,7 @@ export function render(cctx: CanvasRenderingContext2D, world: World, imgs: Resou
     renderBackGround(cctx, imgs)
     renderGeo(cctx, world.geo, world.screen)
     world.player.render(cctx, world.screen, imgs)
-    renderGoal(cctx, imgs, world.goal, world.screen)
+    world.goal.render(cctx, imgs, world.screen)
     renderUI(cctx, imgs, world)
     drawCanvasBorder(cctx)
 }

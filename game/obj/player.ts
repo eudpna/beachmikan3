@@ -9,23 +9,22 @@ import { Screen } from "./screen"
 import { World } from "./world"
 
 export class Player {
+    readonly accel = 3
+    readonly jumpForce = 18
+    readonly maxVx = 12
+    readonly maxVy = 20
+    readonly resistance = 3
+    readonly w = 30
+    readonly h = 30
+
     x = 0
     y = 0
-    w = 30
-    h = 30
     v = {
         x: 0,
         y: 0
     }
     isDead = false
     isJumping = false
-    // isWalking = false
-    // isFlying = false
-    readonly accel = 3
-    readonly jumpForce = 18
-    readonly maxVx = 12
-    readonly maxVy = 20
-    readonly resistance = 3
     isGrounding = false
 
     // flags for animation
@@ -156,26 +155,51 @@ export class Player {
 
     
 
-    // move(direction: Direction4) {
-    //     switch (direction) {
-    //         case 'left': {
-    //             this.x--
-    //             break
-    //         }
-    //         case 'right': {
-    //             this.x++
-    //             break
-    //         }
-    //         case 't': {
-    //             this.y--
-    //             break
-    //         }
-    //         case 'b': {
-    //             this.y++
-    //             break
-    //         }
-    //     }
-    // }
+    animate(geo: Geo, keys: string[]): void {
+
+        if (!this.isJumping) {
+            this.jumpCount = 0
+        } else {
+            this.jumpCount += 1
+        }
+
+        if (this.directionCount < 30 && this.direction === 'r') {
+            this.directionCount += 1
+        } else if (this.directionCount > -30 && this.direction === 'l') {
+            this.directionCount -= 1
+        }
+        // 向きを設定
+        // if (gd.state.stage.isGoal) {
+        //     this.direction = 'r'
+        // }
+        if (keys.includes('left') && !keys.includes('right')) {
+            this.direction = 'l'
+        }
+        else if (!keys.includes('left') && keys.includes('right')) {
+            this.direction = 'r'
+        }
+
+        // 歩いているか
+        if (this.v.x !== 0 && isTouching(this, geo, 'b')) {
+            this.isWalking = true
+            this.walkCount += 1
+        } else {
+            this.isWalking = false
+            this.walkCount = 0
+        }
+
+        // 空中にいるか
+        if (isTouching(this, geo, 'b')) {
+            this.isFlying = false
+            this.isJumping = false
+        } else {
+            this.isFlying = true
+            // ジャンプしているか
+            this.isJumping = (this.v.y < 0)
+        }
+    }
+
+
 
     render(cctx: CanvasRenderingContext2D, screen: Screen, imgs: Resource['imgs']) {
         // cctx.fillStyle = 'red'
@@ -242,49 +266,4 @@ export class Player {
         })
         
     }
-
-    animate(geo: Geo, keys: string[]): void {
-
-        if (!this.isJumping) {
-            this.jumpCount = 0
-        } else {
-            this.jumpCount += 1
-        }
-
-        if (this.directionCount < 30 && this.direction === 'r') {
-            this.directionCount += 1
-        } else if (this.directionCount > -30 && this.direction === 'l') {
-            this.directionCount -= 1
-        }
-        // 向きを設定
-        // if (gd.state.stage.isGoal) {
-        //     this.direction = 'r'
-        // }
-        if (keys.includes('left') && !keys.includes('right')) {
-            this.direction = 'l'
-        }
-        else if (!keys.includes('left') && keys.includes('right')) {
-            this.direction = 'r'
-        }
-
-        // 歩いているか
-        if (this.v.x !== 0 && isTouching(this, geo, 'b')) {
-            this.isWalking = true
-            this.walkCount += 1
-        } else {
-            this.isWalking = false
-            this.walkCount = 0
-        }
-
-        // 空中にいるか
-        if (isTouching(this, geo, 'b')) {
-            this.isFlying = false
-            this.isJumping = false
-        } else {
-            this.isFlying = true
-            // ジャンプしているか
-            this.isJumping = (this.v.y < 0)
-        }
-    }
-
 }
