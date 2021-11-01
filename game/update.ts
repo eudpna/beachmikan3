@@ -6,4 +6,7 @@ import { World } from "./obj/world";
 export function update(world: World, keys: string[]) {
     world.player.update(keys, world)
     world.screen.update(world.player)
+    world.detectGoal()
+    if (world.isGoal) world.goalCount ++
+    else world.goalCount = 0
 }

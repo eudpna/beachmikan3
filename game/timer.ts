@@ -1,6 +1,6 @@
 export class Timer {
     fps: number
-    count = 0
+    tick = 0
     onUpdateFn: (() => void)[] = []
     
 
@@ -15,7 +15,7 @@ export class Timer {
     }
 
     update() {
-        this.count++
+        this.tick++
         this.onUpdateFn.map(fn => fn())
         window.setTimeout(() => {
             this.update()

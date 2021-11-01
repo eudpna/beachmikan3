@@ -1,6 +1,6 @@
 import conf from "../conf"
 import { restrict } from "../lib/math"
-import { Direction4, Rect } from "../lib/physics"
+import { Direction4, Rect, Vec2 } from "../lib/physics"
 import { drawImage } from "../render/drawImage"
 import { Resource } from "../resource/loadResource"
 import { collide, isTouching } from "./bodi"
@@ -125,6 +125,13 @@ export class Player {
         this.y += this.v.y
         // y 衝突判定
         collide(this, geo, ['t', 'b'])
+    }
+
+    detectGoal(goal: Vec2) {
+        // ゴール判定
+        if (goal.x * 32 < (this.x + 32)) {
+            isGoal = true
+        }
     }
 
     // move(direction: Direction4) {

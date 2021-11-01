@@ -17,9 +17,18 @@ export class World {
         y: 0
     }
     isGoal = false
+    goalCount = 0
 
     constructor() {
         ('world')
+    }
+
+    detectGoal(): boolean {
+        // ゴール判定
+        if (this.goal.x * 32 < (this.player.x + 32)) {
+            this.isGoal = true
+        }
+        return this.isGoal
     }
     
     loadStage(index: number) {
