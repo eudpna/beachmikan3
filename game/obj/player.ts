@@ -28,7 +28,15 @@ export class Player {
     readonly resistance = 3
     // walkCount = 0
     isGrounding = false
-    anime = {
+    anime: {
+        directionCount: number,
+        walkCount: number,
+        isFlying: boolean,
+        isJumping: boolean,
+        jumpCount: number,
+        direction: 'l' | 'r'
+        isWalking: boolean,
+    } = {
         directionCount: 0,
         walkCount: 0,
         isFlying: false,
@@ -127,12 +135,7 @@ export class Player {
         collide(this, geo, ['t', 'b'])
     }
 
-    detectGoal(goal: Vec2) {
-        // ゴール判定
-        if (goal.x * 32 < (this.x + 32)) {
-            isGoal = true
-        }
-    }
+    
 
     // move(direction: Direction4) {
     //     switch (direction) {

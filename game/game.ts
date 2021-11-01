@@ -2,7 +2,6 @@ import { World } from "./obj/world"
 import { Facilitator } from "./facilitator"
 import { Resource } from "./resource/loadResource"
 import { KeyListener } from "./keyListener"
-import { update } from "./update"
 import { render } from "./render/render"
 import { UI } from "./ui"
 
@@ -24,7 +23,7 @@ export class Game {
     }
 
     private update() {
-        update(this.world, this.keyListener.keys)
+        this.world.update(this.keyListener.keys)
     }
     
     private render() {

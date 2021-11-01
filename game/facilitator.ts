@@ -3,7 +3,6 @@ import conf from "./conf"
 import { KeyListener } from "./keyListener"
 import { World } from "./obj/world"
 import { Timer } from "./timer"
-import { update } from "./update"
 
 // ゲームの進行役
 

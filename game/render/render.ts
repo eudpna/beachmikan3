@@ -3,7 +3,10 @@ import { Screen } from "../obj/screen"
 import { World } from "../obj/world"
 import { Resource } from "../resource/loadResource"
 import { drawImage, ImgCtx } from "./drawImage"
+import { renderBackGround } from "./renderBackGround"
 import { renderGeo } from "./renderGeo"
+import { renderGoal } from "./renderGoal"
+import { renderUI } from "./renderUI"
 
 // 描画手続き
 
@@ -13,6 +16,7 @@ export function render(cctx: CanvasRenderingContext2D, world: World, imgs: Resou
     renderGeo(cctx, world.geo, world.screen)
     world.player.render(cctx, world.screen, imgs)
     renderGoal(cctx, imgs, world.goal, world.screen)
+    renderUI(cctx, imgs, world)
     drawCanvasBorder(cctx)
 }
 
@@ -30,29 +34,5 @@ function drawCanvasBorder(cctx: CanvasRenderingContext2D) {
 
 
 
-function renderBackGround(cctx: CanvasRenderingContext2D, imgs: Resource['imgs']) {
-    const bgSeaScale = 800
-    cctx.drawImage(imgs['bg-sea'], -150, 0, bgSeaScale, bgSeaScale * (600 / 1000))
-}
 
 
-export function renderGoal(cctx: CanvasRenderingContext2D, imgs: Resource['imgs'], goal: Vec2, screen: Screen) {
-    const w = 100
-    const h = 100
-
-    const goalImgCtx: ImgCtx = {
-        img: imgs['goal'],
-        offset: {
-            x: -(w),
-            y: -(h / 2) + 3
-        },
-        x: goal.x - screen.x,
-        y: goal.y - screen.y,
-        w: w,
-        h: h,
-        flipH: false,
-        rotate: 20
-    }
-
-    drawImage(cctx, goalImgCtx)
-}

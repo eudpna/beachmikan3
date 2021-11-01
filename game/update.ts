@@ -9,4 +9,8 @@ export function update(world: World, keys: string[]) {
     world.detectGoal()
     if (world.isGoal) world.goalCount ++
     else world.goalCount = 0
+    if (world.goalCount === 25) {
+        world.nextStage()
+    }
+    world.stageTick++
 }
