@@ -28,6 +28,6 @@ export class Game {
     }
     
     private render() {
-         render(this.cctx, this.world)
+         render(this.cctx, this.world, this.resource.imgs)
     }
 }

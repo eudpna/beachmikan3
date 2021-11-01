@@ -26,10 +26,10 @@ export class Screen {
         this.move(player)
     }
 
-    move(player: Player) {
+    private move(player: Player) {
 
         const target = {
-            x: (player.x) + player.w / 2,
+            x: (player.x) + player.w / 2 + (32 * 5 * (player.anime.directionCount / 30)),
             y: (player.y) + player.h / 2
         }
 
@@ -40,10 +40,14 @@ export class Screen {
         this.y -= vy
 
         // 位置制限
-        // console.log(this.max, this.min)
         if (this.x > this.max.x) this.x = this.max.x
         if (this.x < this.min.x) this.x = this.min.x
         if (this.y > this.max.y) this.y = this.max.y
         if (this.y < this.min.y) this.y = this.min.y
     }
+
+
+
+
+    
 }

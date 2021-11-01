@@ -1,6 +1,8 @@
 import conf from "../conf"
 import { restrict } from "../lib/math"
-import { Direction4 } from "../lib/physics"
+import { Direction4, Rect } from "../lib/physics"
+import { drawImage } from "../render/drawImage"
+import { Resource } from "../resource/loadResource"
 import { collide, isTouching } from "./bodi"
 import { Geo } from "./geo"
 import { Screen } from "./screen"
@@ -17,15 +19,24 @@ export class Player {
     }
     isDead = false
     isJumping = false
-    isWalking = false
-    isFlying = false
+    // isWalking = false
+    // isFlying = false
     readonly accel = 3
     readonly jumpForce = 18
     readonly maxVx = 12
     readonly maxVy = 20
     readonly resistance = 3
-    walkCount = 0
+    // walkCount = 0
     isGrounding = false
+    anime = {
+        directionCount: 0,
+        walkCount: 0,
+        isFlying: false,
+        isJumping: false,
+        jumpCount: 0,
+        direction: 'l',
+        isWalking: false,
+    }
 
     constructor(x: number, y: number) {
         this.x = x
@@ -34,7 +45,9 @@ export class Player {
 
     // 毎フレーム呼ばれる更新関数
     update(keys: string[], world: World) {
-        this.move(keys, world.geo)
+        if (world.isGoal) this.moveAtGoal(world.geo)
+        else this.move(keys, world.geo)
+        this.animate(world.geo, keys)
     }
 
     private moveX(keys: string[], geo: Geo) {
@@ -86,13 +99,32 @@ export class Player {
         }
     }
 
-    move(keys: string[], geo: Geo) {
+    private move(keys: string[], geo: Geo) {
         this.jump(keys, geo)
         this.isGrounding = false
         this.moveY(keys, geo)
         this.jump(keys, geo)
         this.moveX(keys, geo)
         this.jump(keys, geo)
+    }
+
+    moveAtGoal(geo: Geo): void {
+        this.v.x = this.maxVx
+
+        // x 移動
+        this.x += this.v.x
+        // x 衝突判定
+        collide(this, geo, ['l', 'r'])
+
+        //　y 重力
+        this.v.y += 1.5
+
+        // y 速度制限
+        this.v.y = restrict(this.v.y, -this.maxVy, this.maxVy)
+        // y 移動
+        this.y += this.v.y
+        // y 衝突判定
+        collide(this, geo, ['t', 'b'])
     }
 
     // move(direction: Direction4) {
@@ -116,15 +148,13 @@ export class Player {
     //     }
     // }
 
-    render(cctx: CanvasRenderingContext2D, screen: Screen) {
-        // console.log(this.x, this.y)
-        cctx.fillStyle = 'red'
-        cctx.fillRect(this.x - screen.x, this.y - screen.y, this.w, this.h)
-
+    render(cctx: CanvasRenderingContext2D, screen: Screen, imgs: Resource['imgs']) {
+        // cctx.fillStyle = 'red'
+        // cctx.fillRect(this.x - screen.x, this.y - screen.y, this.w, this.h)
 
         const walkStep = (() => {
             let result = 0
-            let tmp = Math.floor(this.walkCount / 3) % 4
+            let tmp = Math.floor(this.anime.walkCount / 3) % 4
             switch (tmp) {
                 case 0: {
                     return 2
@@ -144,24 +174,77 @@ export class Player {
         const img = (() => {
             if (this.isDead) return 'mikan-fly'
             else if (this.isJumping) return 'mikan-jump'
-            else if (this.isFlying) return 'mikan-fly'
-            else if (this.isWalking) return `mikan-walk${walkStep}`
+            else if (this.anime.isFlying) return 'mikan-fly'
+            else if (this.anime.isWalking) return `mikan-walk${walkStep}`
+            return 'mikan-stop'
         })()
+
+        const playerOffset: Rect = {
+            x: -5,
+            y: -5,
+            w: 40,
+            h: 40
+        }
+
         
-        // drawImage(cctx, {
-        //     img: gd.preset.imgs[playerImg],
-        //     offset: {
-        //         x: playerOffset.x,
-        //         y: gd.state.stage.player.isMikan ? -3 : playerOffset.y
-        //     },
-        //     x: gd.state.stage.player.r.x - gd.state.stage.screen.p.x,
-        //     y: gd.state.stage.player.r.y - gd.state.stage.screen.p.y,
-        //     w: playerOffset.w,
-        //     h: playerOffset.h,
-        //     flipH: gd.state.stage.anime.player.direction === 'left',
-        //     rotate: rotate
-        // })
+        drawImage(cctx, {
+            img: imgs[img],
+            offset: {
+                x: this.anime.direction === 'l' ? (4*conf.c) : playerOffset.x,
+                y: playerOffset.y
+            },
+            x: this.x - screen.x,
+            y: this.y - screen.y,
+            w: playerOffset.w,
+            h: playerOffset.h,
+            flipH: this.anime.direction === 'l',
+            rotate: 0
+        })
         
+    }
+
+    animate(geo: Geo, keys: string[]): void {
+
+        if (!this.anime.isJumping) {
+            this.anime.jumpCount = 0
+        } else {
+            this.anime.jumpCount += 1
+        }
+
+        if (this.anime.directionCount < 30 && this.anime.direction === 'r') {
+            this.anime.directionCount += 1
+        } else if (this.anime.directionCount > -30 && this.anime.direction === 'l') {
+            this.anime.directionCount -= 1
+        }
+        // 向きを設定
+        // if (gd.state.stage.isGoal) {
+        //     this.anime.direction = 'r'
+        // }
+        if (keys.includes('left') && !keys.includes('right')) {
+            this.anime.direction = 'l'
+        }
+        else if (!keys.includes('left') && keys.includes('right')) {
+            this.anime.direction = 'r'
+        }
+
+        // 歩いているか
+        if (this.v.x !== 0 && isTouching(this, geo, 'b')) {
+            this.anime.isWalking = true
+            this.anime.walkCount += 1
+        } else {
+            this.anime.isWalking = false
+            this.anime.walkCount = 0
+        }
+
+        // 空中にいるか
+        if (isTouching(this, geo, 'b')) {
+            this.anime.isFlying = false
+            this.anime.isJumping = false
+        } else {
+            this.anime.isFlying = true
+            // ジャンプしているか
+            this.anime.isJumping = (this.v.y < 0)
+        }
     }
 
 }

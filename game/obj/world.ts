@@ -16,6 +16,7 @@ export class World {
         x: 0,
         y: 0
     }
+    isGoal = false
 
     constructor() {
         ('world')
@@ -31,7 +32,7 @@ export class World {
             x: conf.c * 2,
             y: conf.c
         }, {
-            x: (this.goal.x + 2) - conf.screen.w,
+            x: (this.goal.x + 2) - conf.screen.w + 32,
             y: conf.c * (this.geo[0].length - 2) - conf.screen.h
         })
     }
