@@ -26,25 +26,17 @@ export class Player {
     readonly maxVx = 12
     readonly maxVy = 20
     readonly resistance = 3
-    // walkCount = 0
     isGrounding = false
-    anime: {
-        directionCount: number,
-        walkCount: number,
-        isFlying: boolean,
-        isJumping: boolean,
-        jumpCount: number,
-        direction: 'l' | 'r'
-        isWalking: boolean,
-    } = {
-        directionCount: 0,
-        walkCount: 0,
-        isFlying: false,
-        isJumping: false,
-        jumpCount: 0,
-        direction: 'l',
-        isWalking: false,
-    }
+
+    // flags for animation
+    directionCount = 0
+    walkCount = 0
+    isFlying = false
+    jumpCount = 0
+    direction: 'l' | 'r' = 'l'
+    isWalking = false
+    deadCount = 0
+    deadDirection: 'l' | 'r' = 'l'
 
     constructor(x: number, y: number) {
         this.x = x
@@ -53,9 +45,19 @@ export class Player {
 
     // 毎フレーム呼ばれる更新関数
     update(keys: string[], world: World) {
-        if (world.isGoal) this.moveAtGoal(world.geo)
+        if (this.isDead) this.moveDead()
+        else if (world.isGoal) this.moveAtGoal(world.geo)
         else this.move(keys, world.geo)
         this.animate(world.geo, keys)
+
+        if (this.isDead) this.deadCount++
+        else this.deadCount = 0
+
+        // 死んだらリトライ
+        if (this.deadCount === 30) {
+            this.deadCount = 0
+            world.retry()
+        }
     }
 
     private moveX(keys: string[], geo: Geo) {
@@ -114,6 +116,9 @@ export class Player {
         this.jump(keys, geo)
         this.moveX(keys, geo)
         this.jump(keys, geo)
+        // 落下死亡判定
+        const deadLine = conf.c * (geo[0].length - 2)
+        if (this.y > deadLine) this.isDead = true
     }
 
     moveAtGoal(geo: Geo): void {
@@ -133,6 +138,20 @@ export class Player {
         this.y += this.v.y
         // y 衝突判定
         collide(this, geo, ['t', 'b'])
+    }
+
+    moveDead(): void {
+        if (this.deadCount === 1) {
+            this.v.y = -15
+            if (this.deadDirection === 'l') this.v.x = 5
+            else this.v.x = -7
+        }
+
+        this.v.y += 2
+        this.v.y = restrict(this.v.y, -this.maxVy, this.maxVy)
+
+        this.x += this.v.x
+        this.y += this.v.y
     }
 
     
@@ -162,9 +181,14 @@ export class Player {
         // cctx.fillStyle = 'red'
         // cctx.fillRect(this.x - screen.x, this.y - screen.y, this.w, this.h)
 
+        // 死亡アニメーション
+        if (this.isDead && ((this.deadCount / 4) % 1 === 0)) {
+            return
+        }
+
         const walkStep = (() => {
             let result = 0
-            let tmp = Math.floor(this.anime.walkCount / 3) % 4
+            let tmp = Math.floor(this.walkCount / 3) % 4
             switch (tmp) {
                 case 0: {
                     return 2
@@ -184,8 +208,8 @@ export class Player {
         const img = (() => {
             if (this.isDead) return 'mikan-fly'
             else if (this.isJumping) return 'mikan-jump'
-            else if (this.anime.isFlying) return 'mikan-fly'
-            else if (this.anime.isWalking) return `mikan-walk${walkStep}`
+            else if (this.isFlying) return 'mikan-fly'
+            else if (this.isWalking) return `mikan-walk${walkStep}`
             return 'mikan-stop'
         })()
 
@@ -196,64 +220,70 @@ export class Player {
             h: 40
         }
 
+        let rotate = 0
+        if (this.isDead) {
+            if (this.deadDirection === 'l') rotate = this.deadCount * 6
+            else rotate = this.deadCount * -6
+        }
+
         
         drawImage(cctx, {
             img: imgs[img],
             offset: {
-                x: this.anime.direction === 'l' ? (4*conf.c) : playerOffset.x,
+                x: this.direction === 'l' ? (4*conf.c) : playerOffset.x,
                 y: playerOffset.y
             },
             x: this.x - screen.x,
             y: this.y - screen.y,
             w: playerOffset.w,
             h: playerOffset.h,
-            flipH: this.anime.direction === 'l',
-            rotate: 0
+            flipH: this.direction === 'l',
+            rotate: rotate
         })
         
     }
 
     animate(geo: Geo, keys: string[]): void {
 
-        if (!this.anime.isJumping) {
-            this.anime.jumpCount = 0
+        if (!this.isJumping) {
+            this.jumpCount = 0
         } else {
-            this.anime.jumpCount += 1
+            this.jumpCount += 1
         }
 
-        if (this.anime.directionCount < 30 && this.anime.direction === 'r') {
-            this.anime.directionCount += 1
-        } else if (this.anime.directionCount > -30 && this.anime.direction === 'l') {
-            this.anime.directionCount -= 1
+        if (this.directionCount < 30 && this.direction === 'r') {
+            this.directionCount += 1
+        } else if (this.directionCount > -30 && this.direction === 'l') {
+            this.directionCount -= 1
         }
         // 向きを設定
         // if (gd.state.stage.isGoal) {
-        //     this.anime.direction = 'r'
+        //     this.direction = 'r'
         // }
         if (keys.includes('left') && !keys.includes('right')) {
-            this.anime.direction = 'l'
+            this.direction = 'l'
         }
         else if (!keys.includes('left') && keys.includes('right')) {
-            this.anime.direction = 'r'
+            this.direction = 'r'
         }
 
         // 歩いているか
         if (this.v.x !== 0 && isTouching(this, geo, 'b')) {
-            this.anime.isWalking = true
-            this.anime.walkCount += 1
+            this.isWalking = true
+            this.walkCount += 1
         } else {
-            this.anime.isWalking = false
-            this.anime.walkCount = 0
+            this.isWalking = false
+            this.walkCount = 0
         }
 
         // 空中にいるか
         if (isTouching(this, geo, 'b')) {
-            this.anime.isFlying = false
-            this.anime.isJumping = false
+            this.isFlying = false
+            this.isJumping = false
         } else {
-            this.anime.isFlying = true
+            this.isFlying = true
             // ジャンプしているか
-            this.anime.isJumping = (this.v.y < 0)
+            this.isJumping = (this.v.y < 0)
         }
     }
 

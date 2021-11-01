@@ -21,7 +21,6 @@ export class World {
     stageIndex = 0
     isGoal = false
     goalCount = 0
-    deadCount = 0
     stageTick = 0
     isClear = false
 
@@ -41,13 +40,17 @@ export class World {
         this.stageIndex++
         this.loadStage(this.stageIndex)
     }
+
+    retry() {
+        this.loadStage(this.stageIndex)
+    }
     
     loadStage(index: number) {
         const spec = stageSpecificagions()[index]
         const sd = getStageData(spec.geoID)
         this.goal = sd.goal
-        this.player = new Player(sd.player.x, sd.player.y-100)
-        this.player.anime.direction = (spec.player && spec.player.direction) ? spec.player.direction : 'r'
+        this.player = new Player(sd.player.x, sd.player.y)
+        this.player.direction = (spec.player && spec.player.direction) ? spec.player.direction : 'r'
         this.geo = sd.geo
         this.screen = new Screen(sd.player.x, sd.player.y, {
             x: conf.c * 2,

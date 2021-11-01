@@ -29,8 +29,8 @@ export function renderUI(cctx: CanvasRenderingContext2D, imgs: Resource['imgs'],
 
     // 死亡時 暗転エフェクト
     if (
-        world.deadCount > 25) {
-        cctx.fillStyle = `rgba(0, 0, 0, ${((world.deadCount - 25) / 5)})`
+        world.player.deadCount > 25) {
+        cctx.fillStyle = `rgba(0, 0, 0, ${((world.player.deadCount - 25) / 5)})`
         cctx.fillRect(0, 0, cctx.canvas.width, cctx.canvas.height)
     }
 

@@ -29,7 +29,7 @@ export class Screen {
     private move(player: Player) {
 
         const target = {
-            x: (player.x) + player.w / 2 + (32 * 5 * (player.anime.directionCount / 30)),
+            x: (player.x) + player.w / 2 + (32 * 5 * (player.directionCount / 30)),
             y: (player.y) + player.h / 2
         }
 
