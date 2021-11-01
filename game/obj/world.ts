@@ -1,3 +1,4 @@
+import { Howl } from "howler";
 import conf from "../conf";
 import { getDistance } from "../lib/math";
 import { Vec2 } from "../lib/physics";
@@ -24,6 +25,9 @@ export class World {
     goalCount = 0
     stageTick = 0
     isClear = false
+    waveAudio = new Howl({
+        src: ['/audios/main/wave.mp3']
+    });
 
     constructor() {
     }
@@ -83,7 +87,9 @@ export class World {
         // !!
         if (this.stageIndex === 3) {
             this.goal.x += 40
-        }        
+        }
+
+        
     }
 
     // ゲームの状態を更新する手続き。毎フレーム呼ばれる。
@@ -99,5 +105,22 @@ export class World {
             this.nextStage()
         }
         this.stageTick++
+        this.setWaveAudioVolume()
+    }
+
+    setWaveAudioVolume() {
+        const height = this.geo.h * conf.c
+        const defaultVolume = 0.3
+        // 高いところでは波の音が小さくなる
+        const tmp = defaultVolume - (defaultVolume * ((height - this.player.y) / 1000))
+        const volume = tmp > defaultVolume ? defaultVolume : (tmp < 0.01 ? 0.01 : tmp)
+        this.waveAudio.volume(volume)
+    }
+
+    playWaveAudio() {
+        this.waveAudio.on('end', () => {
+            this.waveAudio.play()
+        })
+        this.waveAudio.play()
     }
 }

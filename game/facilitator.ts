@@ -24,6 +24,7 @@ export class Facilitator {
 
     start() {
         this.world.loadStage(this.world.stageIndex)
+        this.world.playWaveAudio()
         this.timer.start()
         this.render()
     }    
