@@ -13,6 +13,9 @@ export function render(cctx: CanvasRenderingContext2D, world: World, imgs: Resou
     renderBackGround(cctx, imgs)
     world.geo.render(cctx, world.screen)
     world.player.render(cctx, world.screen, imgs)
+    world.kanis.map(kani => {
+        kani.render(cctx, imgs, world.screen)
+    })
     world.goal.render(cctx, imgs, world.screen)
     renderUI(cctx, imgs, world)
     drawCanvasBorder(cctx)
