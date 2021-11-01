@@ -71,13 +71,13 @@ export class World {
                 direction: s ? s.direction : 'l',
             })
         })
-        console.log(this.kanis)
         this.geo = new Geo(sd.chips)
+        const x = (this.goal.x + 2) - conf.screen.w + 32 + (index === 3 ? 30 : 0)
         this.screen = new Screen(sd.player.x, sd.player.y, {
             x: conf.c * 2,
             y: conf.c
         }, {
-            x: (this.goal.x + 2) - conf.screen.w + 32,
+            x: x,
             y: conf.c * (this.geo.h - 2) - conf.screen.h
         })
         this.isGoal = false

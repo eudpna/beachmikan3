@@ -8,7 +8,7 @@ import { GameElAvoidSSR } from '../components/game/GameElAvoidSSR';
 const Index: React.FC<{}> = () => {
     useEffect(() => {
         window.addEventListener('keydown', (e) => {
-            if (['Left', 'ArrowLeft', 'Right', 'ArrowRight', 'Down', 'ArrowDown', 'Up', 'ArrowUp', 'z', 'x'].includes(e.key)) {
+            if (['Left', 'ArrowLeft', 'Right', 'ArrowRight', 'Down', 'ArrowDown', 'Up', 'ArrowUp', 'z', 'x', ' '].includes(e.key)) {
                 e.preventDefault()
             }
         })
@@ -18,44 +18,30 @@ const Index: React.FC<{}> = () => {
     }, []);
     return <>
         <Head>
-            <title>a shooter in the wilderness</title>
+            <title>ビーチみかん</title>
             <meta name="viewport" content=""></meta>
         </Head>
         <div lang="ja" className="w-full pt-10">
             <div>
                 <GameElAvoidSSR />
             </div>
-            <div className="mx-auto max-w-xl pb-12" style={{
-                maxWidth: '35rem'
+            <div className="mx-auto" style={{
+                width: 640
             }}>
-                <p className="py-4 text-center">
-                    a shooter in the wilderness
-                </p>
-                <p>
-                    新進気鋭のバウンティ・ハンターであるキミに新たな仕事の依頼だ。<br/>今回のミッションはとある惑星の荒地に出没する暴走宇宙船を撃破すること。<br/>危険な仕事だが、やり遂げれば賞金でとうぶん遊んで暮らせるだろう。<br/>道中、獰猛な宇宙生物にはじゅうぶん気をつけて。成功を祈る。
-                </p>
-                <div className="py-6">
-                    <p className="text-center pb-1">操作方法</p>
-                    <table className="border border-collapse border-black mx-auto">
-                        <tbody>
-                            <tr>
-                                <td className="border border-black px-1">矢印</td>
-                                <td className="border border-black px-1">移動、上を向く、下を向く</td>
-                            </tr>
-                            <tr>
-                                <td className="border border-black px-1">z</td>
-                                <td className="border border-black px-1">ジャンプ</td>
-                            </tr>
-                            <tr>
-                                <td className="border border-black px-1">x</td>
-                                <td className="border border-black px-1">レーザーガン発射</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div className="my-12 pb-16">
+                    <section className="mb-6">
+                        <h2 className="font-bold border-b border-black my-3">概要</h2>
+                        <p className="my-4 text-sm">丸い生き物を操作してゴールを目指せ！<br />横スクロールアクションゲーム　全5ステージ</p>
+                        <p className="my-4 text-sm">[操作方法]<br />矢印キーで移動</p>
+                    </section>
+                    <section className="mb-6">
+                        <h2 className="font-bold border-b border-black my-3">更新履歴</h2>
+                        <ul className="text-sm">
+                            <li>2021/11/01 不具合を修正</li>
+                            <li>2021/04/01 ver1.0 公開</li>
+                        </ul>
+                    </section>
                 </div>
-                <p className="text-center my-8 text-sm">
-                    <A href="/soundeffect">効果音ダウンロード</A>
-                </p>
             </div>
         </div>
     </>

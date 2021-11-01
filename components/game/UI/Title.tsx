@@ -1,5 +1,6 @@
 import conf from "../../../game/conf"
 import { UI } from "../../../game/ui"
+import { StartBtn } from "./StartBtn"
 
 export const Title: React.FC<{
     ui: UI
@@ -23,42 +24,40 @@ export const Title: React.FC<{
                 cursor: 'default',
             }}
         >
-            <StartBtn onClick={() => {
-                props.ui.start()
-            }} />
+            <StartBtn ui={props.ui} />
         </div>
 
     </>
 }
 
 
-const StartBtn: React.FC<{
-    onClick: Function
-}> = (props) => {
+// const StartBtn: React.FC<{
+//     onClick: Function
+// }> = (props) => {
 
-    const color = 'white'
+//     const color = 'white'
 
-    return <>
-        <div
-            onClick={() => {
-                props.onClick()
-            }}
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                borderColor: color,
-                color: color,
-                width: '100%',
-                height: '100%',
-                margin: 'auto', textAlign: 'center',
-                lineHeight: conf.screen.h - 40 + 'px',
-                verticalAlign: 'middle',
-                fontWeight: 'bold',
-                fontSize: '1.8rem',
-                zIndex: 4,
-                cursor: 'pointer',
-            }}
-        >クリックしてスタート</div>
-    </>
-}
+//     return <>
+//         <div
+//             onClick={() => {
+//                 props.onClick()
+//             }}
+//             style={{
+//                 position: 'absolute',
+//                 top: 0,
+//                 left: 0,
+//                 borderColor: color,
+//                 color: color,
+//                 width: '100%',
+//                 height: '100%',
+//                 margin: 'auto', textAlign: 'center',
+//                 lineHeight: conf.screen.h - 40 + 'px',
+//                 verticalAlign: 'middle',
+//                 fontWeight: 'bold',
+//                 fontSize: '1.8rem',
+//                 zIndex: 4,
+//                 cursor: 'pointer',
+//             }}
+//         >スタート</div>
+//     </>
+// }

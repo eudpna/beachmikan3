@@ -4,6 +4,7 @@ import { Game } from "../../game/game";
 import { loadResource } from "../../game/resource/loadResource";
 import conf from "../../game/conf";
 import { UIEl } from "./UI/UIEl";
+import { renderLoadingScreen } from "../../game/renderLoadingScreen";
 
 
 export const GameEl: React.FC<{}> = () => {
@@ -23,6 +24,7 @@ export const GameEl: React.FC<{}> = () => {
     
     useEffect(() => {
         if (!cctx) return
+        renderLoadingScreen(cctx)
         loadResource()
         .then(resource => {
             setState(state => ({

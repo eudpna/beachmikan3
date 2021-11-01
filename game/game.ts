@@ -4,6 +4,7 @@ import { Resource } from "./resource/loadResource"
 import { KeyListener } from "./keyListener"
 import { render } from "./render/render"
 import { UI } from "./ui"
+import { renderBackGround } from "./render/renderBackGround"
 
 // ゲーム全体を統括
 
@@ -19,7 +20,8 @@ export class Game {
         this.resource = resource
         this.cctx = cctx
         this.ui = new UI(this.facilitator, rerenderUI)
-        this.render()
+        
+        renderBackGround(cctx, this.resource.imgs)
     }
 
     private update() {        

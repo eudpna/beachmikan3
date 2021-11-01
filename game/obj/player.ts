@@ -316,20 +316,16 @@ export class Player {
     }
 
     playJumpSound() {
-        // const audio = new Howl({
-        //     src: ['/audios/main/jump.mp3']
-        // });
-        // audio.volume(0.4)
-        // audio.rate(1.4)
-        // audio.play()
-        const audio = new Audio('/audios/main/jump.mp3')
-        audio.playbackRate = 4
+        const audio = new Howl({
+            src: ['/audios/main/jump.mp3']
+        });        
         audio.play()
     }
 
     playHighJumpSound() {
-        const audio = new Audio('/audios/main/jump.mp3')
-        audio.playbackRate = 2
+        const audio = new Howl({
+            src: ['/audios/main/jump-high.mp3']
+        });
         audio.play()
     }
 

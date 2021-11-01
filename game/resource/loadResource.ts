@@ -8,6 +8,9 @@ export type Resource = {
 }
 
 export async function loadResource(): Promise<Resource> {
+    // const a = await new Promise((resolve) => {
+    //     setTimeout(resolve, 5000)
+    // })
     return {
         imgs: await loadImages(),
         audios: await loadAudios(),
