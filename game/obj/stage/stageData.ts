@@ -1,13 +1,13 @@
 import conf from '../../conf'
 import { Vec2 } from '../../lib/physics'
-import { Geo } from '../geo'
+import { Chips, Geo } from '../geo'
 import geoDatas from './geos.json'
 import { StageSpecification } from './stageSpecification'
 
 // GeoDataからStageDataを取得する
 export type StageData = {
     id: string,
-    geo: Geo,
+    chips: Chips,
     goal: Vec2,
     player: Vec2,
     kanis: {
@@ -70,7 +70,7 @@ export function getStageData(geoID: string): StageData {
     }
     return {
         id: geoID,
-        geo: c,
+        chips: c,
         // geo: {
         //     c: c,
         //     w: c.length,

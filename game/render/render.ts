@@ -4,7 +4,6 @@ import { World } from "../obj/world"
 import { Resource } from "../resource/loadResource"
 import { drawImage, ImgCtx } from "./drawImage"
 import { renderBackGround } from "./renderBackGround"
-import { renderGeo } from "./renderGeo"
 import { renderUI } from "./renderUI"
 
 // 描画手続き
@@ -12,7 +11,7 @@ import { renderUI } from "./renderUI"
 export function render(cctx: CanvasRenderingContext2D, world: World, imgs: Resource['imgs']) {
     clearCanvas(cctx)
     renderBackGround(cctx, imgs)
-    renderGeo(cctx, world.geo, world.screen)
+    world.geo.render(cctx, world.screen)
     world.player.render(cctx, world.screen, imgs)
     world.goal.render(cctx, imgs, world.screen)
     renderUI(cctx, imgs, world)

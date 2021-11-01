@@ -78,16 +78,16 @@ export class Player {
         // x移動
         this.x += this.v.x
          // x 衝突判定
-        const touches = collide(this, geo, ['l', 'r'])
+        const touches = collide(this, geo.chips, ['l', 'r'])
         if (touches.includes('b')) this.isGrounding = true
         // フラグリセット
-        if (touches.includes('b') || isTouching(this, geo, 'b')) this.isJumping = false
+        if (touches.includes('b') || isTouching(this, geo.chips, 'b')) this.isJumping = false
     }
 
     private moveY(keys: string[], geo: Geo) {
         // y
         // y 上衝突
-        if (isTouching(this, geo, 't')) this.v.y = 1
+        if (isTouching(this, geo.chips, 't')) this.v.y = 1
         //　y 重力
         this.v.y += 1.5
         
@@ -95,12 +95,12 @@ export class Player {
         this.v.y = restrict(this.v.y, -this.maxVy, this.maxVy)
         this.y += this.v.y
         // y 衝突判定
-        const touches = collide(this, geo, ['t', 'b'])
+        const touches = collide(this, geo.chips, ['t', 'b'])
         if (touches.includes('b')) this.isGrounding = true
     }
 
     private jump(keys: string[], geo: Geo) {
-        const touches = collide(this, geo, ['t', 'b'])
+        const touches = collide(this, geo.chips, ['t', 'b'])
         if (touches.includes('b')) this.isGrounding = true
         if (this.isGrounding && keys.includes('up')) {
             this.isJumping = true
@@ -116,7 +116,7 @@ export class Player {
         this.moveX(keys, geo)
         this.jump(keys, geo)
         // 落下死亡判定
-        const deadLine = conf.c * (geo[0].length - 2)
+        const deadLine = conf.c * (geo.h - 2)
         if (this.y > deadLine) this.isDead = true
     }
 
@@ -126,7 +126,7 @@ export class Player {
         // x 移動
         this.x += this.v.x
         // x 衝突判定
-        collide(this, geo, ['l', 'r'])
+        collide(this, geo.chips, ['l', 'r'])
 
         //　y 重力
         this.v.y += 1.5
@@ -136,7 +136,7 @@ export class Player {
         // y 移動
         this.y += this.v.y
         // y 衝突判定
-        collide(this, geo, ['t', 'b'])
+        collide(this, geo.chips, ['t', 'b'])
     }
 
     moveDead(): void {
@@ -180,7 +180,7 @@ export class Player {
         }
 
         // 歩いているか
-        if (this.v.x !== 0 && isTouching(this, geo, 'b')) {
+        if (this.v.x !== 0 && isTouching(this, geo.chips, 'b')) {
             this.isWalking = true
             this.walkCount += 1
         } else {
@@ -189,7 +189,7 @@ export class Player {
         }
 
         // 空中にいるか
-        if (isTouching(this, geo, 'b')) {
+        if (isTouching(this, geo.chips, 'b')) {
             this.isFlying = false
             this.isJumping = false
         } else {

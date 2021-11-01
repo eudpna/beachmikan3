@@ -11,7 +11,7 @@ import { stageSpecificagions } from "./stage/stageSpecification";
 // ゲーム内オブジェクトの管理担当
 export class World {
     // objects
-    geo: Geo = []
+    geo: Geo = new Geo([[0]])
     player = new Player(0, 0)
     screen = new Screen(0, 0, {x:0,y:0}, {x:0,y:0})
     goal: Goal = new Goal(0, 0)
@@ -49,13 +49,13 @@ export class World {
         this.goal = new Goal(sd.goal.x, sd.goal.y)
         this.player = new Player(sd.player.x, sd.player.y)
         this.player.direction = (spec.player && spec.player.direction) ? spec.player.direction : 'r'
-        this.geo = sd.geo
+        this.geo = new Geo(sd.chips)
         this.screen = new Screen(sd.player.x, sd.player.y, {
             x: conf.c * 2,
             y: conf.c
         }, {
             x: (this.goal.x + 2) - conf.screen.w + 32,
-            y: conf.c * (this.geo[0].length - 2) - conf.screen.h
+            y: conf.c * (this.geo.h - 2) - conf.screen.h
         })
         this.isGoal = false
         this.stageTick = 0
