@@ -22,8 +22,9 @@ export class Game {
         this.render()
     }
 
-    private update() {
-        this.world.update(this.keyListener.keys)
+    private update() {        
+        this.world.update(this.keyListener.keys, this.keyListener.nowKeys)
+        this.keyListener.clear()
     }
     
     private render() {

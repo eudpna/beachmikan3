@@ -1,17 +1,22 @@
 export class KeyListener {
     keys: string[] = []
+    nowKeys: string[] = []
 
     constructor() {        
         window.addEventListener('keydown', e => {
+            if (!this.keys.includes(modifyKeyName(e.key))) {
+                this.nowKeys.push(modifyKeyName(e.key))
+            }
             this.keys.push(modifyKeyName(e.key))
         })
         window.addEventListener('keyup', e => {
             this.keys = this.keys.filter(k => k !== modifyKeyName(e.key))
+            this.nowKeys = this.nowKeys.filter(k => k !== modifyKeyName(e.key))
         })
     }
 
     clear() {
-        this.keys = []
+        this.nowKeys = []
     }
 }
 

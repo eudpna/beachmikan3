@@ -88,8 +88,8 @@ export class World {
 
     // ゲームの状態を更新する手続き。毎フレーム呼ばれる。
     // 引数keysは押されているキーのリスト
-    update(keys: string[]) {
-        this.player.update(keys, this)
+    update(keys: string[], nowKeys: string[]) {
+        this.player.update(keys, nowKeys, this)
         this.kanis.map(kani => kani.update(this.geo, this.screen, this.kanis))
         this.screen.update(this.player)
         this.detectGoal()

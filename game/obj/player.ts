@@ -45,20 +45,18 @@ export class Player {
     }
 
     // 毎フレーム呼ばれる更新関数
-    update(keys: string[], world: World) {
+    update(keys: string[], nowKeys: string[], world: World) {
         if (!this.isDead) {
             this.damage(world.kanis, keys)
         }
 
         if (this.isDead) this.moveDead()
         else if (world.isGoal) this.moveAtGoal(world.geo)
-        else this.move(keys, world.geo)
+        else this.move(keys, nowKeys, world.geo)
         this.animate(world.geo, keys)
 
         if (this.isDead) this.deadCount++
         else this.deadCount = 0
-
-       
 
         // 死んだらリトライ
         if (this.deadCount === 30) {
@@ -107,11 +105,10 @@ export class Player {
         if (touches.includes('b')) this.isGrounding = true
     }
 
-    private jump(keys: string[], geo: Geo) {
-        
+    private jump(nowKeys: string[], geo: Geo) {
         const touches = collide(this, geo.chips, ['t', 'b'])
         if (touches.includes('b')) this.isGrounding = true
-        if (!this.isJumping && this.isGrounding && keys.includes('up')) {
+        if (!this.isJumping && this.isGrounding && nowKeys.includes('up')) {
             this.isJumping = true
             this.y --;
             this.v.y = -this.jumpForce
@@ -119,14 +116,14 @@ export class Player {
         }
     }
 
-    private move(keys: string[], geo: Geo) {
+    private move(keys: string[], nowKeys: string[], geo: Geo) {
         const isGrounding = this.isGrounding
-        this.jump(keys, geo)
+        this.jump(nowKeys, geo)
         this.isGrounding = false
         this.moveY(keys, geo)
-        this.jump(keys, geo)
+        this.jump(nowKeys, geo)
         this.moveX(keys, geo)
-        this.jump(keys, geo)
+        this.jump(nowKeys, geo)
         // 落下死亡判定
         const deadLine = conf.c * (geo.h - 2)
         if (this.y > deadLine) {
