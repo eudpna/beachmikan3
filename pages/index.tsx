@@ -21,7 +21,14 @@ const Index: React.FC<{}> = () => {
             <title>ビーチみかん</title>
             <meta name="viewport" content=""></meta>
         </Head>
-        <div lang="ja" className="w-full pt-10">
+        <div lang="ja" className="w-full pt-2">
+            <div className="pb-8 mx-auto" style={{
+                width: 640
+            }}>
+                <A href="https://nyaw.net" inSite>
+                    nyaw.net
+                </A>
+            </div>
             <div>
                 <GameElAvoidSSR />
             </div>
