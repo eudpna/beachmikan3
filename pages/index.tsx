@@ -4,6 +4,7 @@ import React, { useEffect } from 'react'
 import { A } from '../components/A';
 import { GameElAvoidSSR } from '../components/game/GameElAvoidSSR';
 
+const GA_ID = "G-MQDBWDWYNM"
 
 const Index: React.FC<{}> = () => {
     useEffect(() => {
@@ -20,6 +21,18 @@ const Index: React.FC<{}> = () => {
         <Head>
             <title>ビーチみかん</title>
             <meta name="viewport" content=""></meta>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`} />
+            <script
+                dangerouslySetInnerHTML={{
+                    __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_ID}', {
+                    page_path: window.location.pathname,
+                  });`,
+                }}
+            />
         </Head>
         <div lang="ja" className="w-full pt-2">
             <div className="pb-8 mx-auto" style={{
