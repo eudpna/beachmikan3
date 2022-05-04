@@ -1,8 +1,8 @@
-[a shooter in the wilderness](https://siw.nyaw.net/) 
+[ビーチみかん](https://beachmikan.nyaw.net/) 
 
 シンプルな横スクロールアクションゲーム。
 
-プレイ時間約3分。
+プレイ時間約5分。
 
 built on Next.js
 
